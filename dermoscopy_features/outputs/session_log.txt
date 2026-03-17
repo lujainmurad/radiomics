@@ -1,0 +1,1090 @@
+Session date: Tue Mar 17 21:44:13 UTC 2026
+     1	    1  mkdir -p dermoscopy_features/data/masked_images
+     2	    2  mkdir -p dermoscopy_features/data/predicted_masks_clean
+     3	    3  mkdir -p dermoscopy_features/outputs
+     4	    4  cd dermoscopy_features
+     5	    5  pwd
+     6	    6  cd data
+     7	    7  pip install gdown
+     8	    8  mkdir -p /workspaces/radiomics/dermoscopy_features/data/masked_images/train
+     9	    9  mkdir -p /workspaces/radiomics/dermoscopy_features/data/masked_images/test
+    10	   10  mkdir -p /workspaces/radiomics/dermoscopy_features/data/masked_images/val
+    11	   11  cd /workspaces/radiomics/dermoscopy_features/data/masked_images
+    12	   12  gdown 1T_TlE5BY27j5uu7OL_bTzQovBcFTaPVJ -O test/test.zip
+    13	   13  gdown 1c6RMof-xb4P1dRxCWuX8GSfb_PYzQO9X -O train/train.zip
+    14	   14  gdown 1lKbUvDul-17WS8OvQW50P-sgO2GlA76T -O val/val.zip
+    15	   15  unzip test/test.zip -d test/
+    16	   16  unzip train/train.zip -d train/
+    17	   17  unzip val/val.zip -d val/
+    18	   18  rm test/test.zip train/train.zip val/val.zip
+    19	   19  find train -type f | wc -l
+    20	   20  find test -type f | wc -l
+    21	   21  find val -type f | wc -l
+    22	   22  cd ~/workspace/dermoscopy_features 
+    23	   23  cd .
+    24	   24  cd ..
+    25	   25  pip install -r requirements.txt
+    26	   26  ll
+    27	   27  cd /workspaces/radiomics/requirements.txt
+    28	   28  ll
+    29	   29  pip install -r requirements.txt
+    30	   30  pwd
+    31	   31  cat > requirements.txt << 'EOF'
+    32	opencv-python>=4.8.0
+    33	numpy>=1.24.0
+    34	tqdm>=4.65.0
+    35	pyradiomics>=3.1.0
+    36	SimpleITK>=2.3.0
+    37	matplotlib>=3.7.0
+    38	pandas>=2.0.0
+    39	EOF
+       
+    40	   32  cat requirements.txt
+    41	   33  pip install -r requirements.txt
+    42	   34  # Overwrite requirements.txt with relaxed versions
+    43	   35  cat > requirements.txt << 'EOF'
+    44	opencv-python>=4.8.0
+    45	numpy>=1.24.0
+    46	tqdm>=4.65.0
+    47	pyradiomics>=3.0.1
+    48	SimpleITK>=2.3.0
+    49	matplotlib>=3.7.0
+    50	pandas>=2.0.0
+    51	EOF
+       
+    52	   36  # Install step by step so you can see if anything fails
+    53	   37  pip install opencv-python numpy tqdm matplotlib pandas
+    54	   38  pip install SimpleITK
+    55	   39  pip install pyradiomics==3.0.1
+    56	   40  pip install numpy --upgrade
+    57	   41  pip install pyradiomics==3.0.1 --no-build-isolation
+    58	   42  pip install setuptools wheel cython numpy
+    59	   43  pip install git+https://github.com/AIM-Harvard/pyradiomics.git --no-build-isolation
+    60	   44  pip download pyradiomics==3.0.1 --no-deps -d /tmp/rx_src
+    61	   45  # Confirm core packages are fine
+    62	   46  python -c "import cv2, numpy, tqdm, matplotlib, pandas; print('All OK')"
+    63	   47  sudo apt-get update -y
+    64	   48  sudo apt-get install -y libgl1 libglib2.0-0
+    65	   49  sudo apt-get update -y
+    66	   50  sudo apt-get install -y python3.10 python3.10-dev python3.10-venv
+    67	   51  sudo add-apt-repository ppa:deadsnakes/ppa -y
+    68	   52  sudo apt-get update -y --allow-insecure-repositories
+    69	   53  sudo apt-get install -y python3.10 python3.10-dev python3.10-venv python3.10-distutils
+    70	   54  python3.10 --version
+    71	   55  pip install --upgrade pip setuptools wheel
+    72	   56  pip install numpy==1.24.4
+    73	   57  cd /workspaces/radiomics/dermoscopy_features
+    74	   58  python3.10 -m venv venv310
+    75	   59  source venv310/bin/activate
+    76	   60  python --version
+    77	   61  pip --version
+    78	   62  pip install --upgrade pip setuptools wheel
+    79	   63  pip install numpy==1.24.4
+    80	   64  pip install SimpleITK
+    81	   65  pip install pyradiomics==3.0.1
+    82	   66  pip install pyradiomics==3.0.1 --no-build-isolation
+    83	   67  python -c "
+    84	import sys
+    85	print('Python:', sys.version[:6])
+    86	from radiomics import featureextractor
+    87	import SimpleITK as sitk
+    88	print('SimpleITK:', sitk.Version())
+    89	print('PyRadiomics: OK — all ready')
+    90	"
+    91	   68  pip install opencv-python-headless tqdm matplotlib pandas scipy
+    92	   69  # Verify everything together
+    93	   70  python -c "
+    94	import cv2, numpy, tqdm, matplotlib, pandas, scipy
+    95	from radiomics import featureextractor
+    96	import SimpleITK as sitk
+    97	print('cv2          :', cv2.__version__)
+    98	print('numpy        :', numpy.__version__)
+    99	print('scipy        :', scipy.__version__)
+   100	print('SimpleITK    :', sitk.Version().split()[2])
+   101	print('PyRadiomics  : OK')
+   102	print()
+   103	print('ALL PACKAGES READY')
+   104	"
+   105	   71  python -c "
+   106	import cv2, numpy, tqdm, matplotlib, pandas, scipy
+   107	from radiomics import featureextractor
+   108	import SimpleITK as sitk
+   109	print('cv2          :', cv2.__version__)
+   110	print('numpy        :', numpy.__version__)
+   111	print('scipy        :', scipy.__version__)
+   112	print('SimpleITK    :', sitk.Version().split()[2])
+   113	print('PyRadiomics  : OK')
+   114	print()
+   115	print('ALL PACKAGES READY')
+   116	"
+   117	   72  # Step 1 — downgrade numpy back to 1.x and reinstall pyradiomics against it
+   118	   73  pip install "numpy<2" --force-reinstall
+   119	   74  pip uninstall opencv-python-headless -y
+   120	   75  pip install opencv-python-headless==4.8.1.78
+   121	   76  pip install pyradiomics==3.0.1 --no-build-isolation --force-reinstall --no-deps
+   122	   77  python -c "
+   123	import numpy
+   124	print('numpy       :', numpy.__version__)   # must be 1.26.x
+   125	import cv2
+   126	print('cv2         :', cv2.__version__)
+   127	from radiomics import featureextractor
+   128	import SimpleITK as sitk
+   129	import tqdm, matplotlib, pandas, scipy
+   130	print('scipy       :', scipy.__version__)
+   131	print('SimpleITK   :', sitk.Version().split()[2])
+   132	print('PyRadiomics : OK')
+   133	print()
+   134	print('ALL PACKAGES READY — run the script now')
+   135	"
+   136	   78  python -c "
+   137	import numpy, cv2, tqdm, matplotlib, pandas, scipy
+   138	import SimpleITK as sitk
+   139	from radiomics import featureextractor
+   140	print('numpy       :', numpy.__version__)
+   141	print('cv2         :', cv2.__version__)
+   142	print('scipy       :', scipy.__version__)
+   143	print('SimpleITK   :', sitk.__version__)
+   144	print('PyRadiomics : OK')
+   145	print()
+   146	print('ALL PACKAGES READY')
+   147	"
+   148	   79  python feature_extraction.py   --masked_root data/masked_images   --mask_root   data/predicted_masks_clean   --output      outputs/features.csv   --max_dim     512   --workers     1
+   149	   80  cd data
+   150	   81  cd predicted_masks_clean/
+   151	   82  pip install gdown
+   152	   83  mkdir -p /workspaces/radiomics/dermoscopy_features/data/predicted_masks_clean/train
+   153	   84  mkdir -p /workspaces/radiomics/dermoscopy_features/data/predicted_masks_clean/test
+   154	   85  mkdir -p /workspaces/radiomics/dermoscopy_features/data/predicted_masks_clean/val
+   155	   86  cd /workspaces/radiomics/dermoscopy_features/data/predicted_masks_clean
+   156	   87  gdown 1oZz2hfx_zXhLdwMCC_IlBhzygcUeaiW1 -O test/test.zip
+   157	   88  gdown 1KW-hGFUCe4auIfdV6dgRQkJLM0lBMEI3 -O train/train.zip
+   158	   89  gdown 1IOybjxrDCTCGtCSIJ1IUTCMmQ5EbUqEi -O val/val.zip
+   159	   90  unzip test/test.zip -d test/
+   160	   91  unzip train/train.zip -d train/
+   161	   92  unzip val/val.zip -d val/
+   162	   93  rm test/test.zip
+   163	   94  rm train/train.zip
+   164	   95  rm val/val.zip
+   165	   96  ls test | head
+   166	   97  ls train | head
+   167	   98  ls val | head
+   168	   99  find train -type f | wc -l
+   169	  100  find test -type f | wc -l
+   170	  101* # Create the script file
+   171	cat > /workspaces/radiomics/dermoscopy_features/feature_extraction.py << 'ENDOFFILE'
+   172	import os, csv, math, warnings, argparse
+   173	import numpy as np
+   174	import cv2
+   175	from glob import glob
+   176	from tqdm import tqdm
+   177	from multiprocessing import Pool, cpu_count
+   178	warnings.filterwarnings("ignore")
+       
+   179	try:
+   180	    import SimpleITK as sitk
+   181	    from radiomics import featureextractor as _rx_extractor
+   182	    _RADIOMICS_OK = True
+   183	except ImportError:
+   184	    _RADIOMICS_OK = False
+   185	    print("[WARN] pyradiomics not available — rx_ features skipped")
+       
+   186	DEFAULT_MASKED_ROOT = "data/masked_images"
+   187	DEFAULT_MASK_ROOT   = "data/predicted_masks_clean"
+   188	DEFAULT_OUTPUT_CSV  = "outputs/features.csv"
+   189	DEFAULT_MAX_DIM     = 512
+   190	DEFAULT_WORKERS     = max(1, cpu_count() - 1)
+   191	RADIOMICS_CLASSES   = ["firstorder","shape2D","glcm","glrlm","glszm","ngtdm"]
+       
+   192	def _stem(p): return os.path.splitext(os.path.basename(p))[0]
+   193	def _safe(v):
+   194	    try:
+   195	        f = float(v); return 0.0 if (math.isnan(f) or math.isinf(f)) else f
+   196	    except: return 0.0
+   197	def _resize_pair(rgb, mask, max_dim):
+   198	    if max_dim <= 0: return rgb, mask
+   199	    h, w = rgb.shape[:2]; scale = max_dim / max(h, w)
+   200	    if scale >= 1.0: return rgb, mask
+   201	    nh, nw = int(h*scale), int(w*scale)
+   202	    return (cv2.resize(rgb,(nw,nh),interpolation=cv2.INTER_AREA),
+   203	            cv2.resize(mask,(nw,nh),interpolation=cv2.INTER_NEAREST))
+   204	def _mstats(arr):
+   205	    arr = arr.astype(np.float64)
+   206	    if arr.size == 0: return 0.,0.,0.,0.
+   207	    mu = arr.mean(); std = arr.std()+1e-9
+   208	    return float(mu),float(arr.std()),_safe(((arr-mu)**3).mean()/std**3),_safe(((arr-mu)**4).mean()/std**4)
+       
+   209	_EXTRACTOR = None
+   210	def _get_extractor():
+   211	    global _EXTRACTOR
+   212	    if _EXTRACTOR is None and _RADIOMICS_OK:
+   213	        params = {"setting":{"binWidth":25,"resampledPixelSpacing":None,
+   214	                             "interpolator":"sitkBSpline","verbose":False,
+   215	                             "force2D":True,"force2Ddimension":0},
+   216	                  "featureClass":{cls:[] for cls in RADIOMICS_CLASSES}}
+   217	        _EXTRACTOR = _rx_extractor.RadiomicsFeatureExtractor(params)
+   218	        _EXTRACTOR.disableAllFeatures()
+   219	        for cls in RADIOMICS_CLASSES: _EXTRACTOR.enableFeatureClassByName(cls)
+   220	    return _EXTRACTOR
+       
+   221	def pyradiomics_features(roi_gray, bw):
+   222	    ext = _get_extractor()
+   223	    if ext is None or bw.sum() == 0: return {}
+   224	    try:
+   225	        img_sitk  = sitk.GetImageFromArray(roi_gray.astype(np.int16))
+   226	        mask_sitk = sitk.GetImageFromArray(bw.astype(np.uint8))
+   227	        img_sitk.SetSpacing([1.0,1.0]); mask_sitk.SetSpacing([1.0,1.0])
+   228	        result = ext.execute(img_sitk, mask_sitk, label=1)
+   229	        return {k.replace("original_","rx_",1): _safe(v)
+   230	                for k,v in result.items() if not k.startswith("diagnostics_")}
+   231	    except: return {}
+       
+   232	def asymmetry_features(bw, area, contours):
+   233	    if area==0: return {k:0.0 for k in("asym_axis_aligned","asym_pca","compactness","elongation","axis_ratio")}
+   234	    feats={}; M=cv2.moments(bw); cx=M["m10"]/(M["m00"]+1e-9); cy=M["m01"]/(M["m00"]+1e-9)
+   235	    feats["asym_axis_aligned"]=_safe((float((bw!=np.fliplr(bw)).sum())+float((bw!=np.flipud(bw)).sum()))/(2.*area))
+   236	    ys,xs=np.where(bw>0); pts=np.stack([xs-cx,ys-cy],axis=1).astype(np.float32)
+   237	    _,_,Vt=np.linalg.svd(pts,full_matrices=False); proj=pts@Vt[0]
+   238	    h1,h2=(proj>=0).sum(),(proj<0).sum(); feats["asym_pca"]=_safe(abs(h1-h2)/(h1+h2+1e-9))
+   239	    if contours:
+   240	        cnt=max(contours,key=cv2.contourArea); peri=cv2.arcLength(cnt,True)+1e-9
+   241	        feats["compactness"]=_safe(4*math.pi*area/peri**2)
+   242	        if len(cnt)>=5:
+   243	            (_,_),(ma,mi),_=cv2.fitEllipse(cnt)
+   244	            feats["elongation"]=_safe(mi/(ma+1e-9)); feats["axis_ratio"]=_safe(ma/(mi+1e-9))
+   245	        else: feats["elongation"]=1.0; feats["axis_ratio"]=1.0
+   246	    else: feats["compactness"]=feats["elongation"]=0.0; feats["axis_ratio"]=1.0
+   247	    return feats
+       
+   248	def _fractal(bw):
+   249	    edge=cv2.Canny((bw*255).astype(np.uint8),50,150); sizes,counts=[],[]
+   250	    s=2
+   251	    while s<=128:
+   252	        h2=(edge.shape[0]//s)*s; w2=(edge.shape[1]//s)*s
+   253	        if h2==0 or w2==0: s*=2; continue
+   254	        nb=edge[:h2,:w2].reshape(h2//s,s,w2//s,s).any(axis=(1,3)).sum()
+   255	        if nb>0: sizes.append(s); counts.append(nb)
+   256	        s*=2
+   257	    if len(sizes)<2: return 1.0
+   258	    return _safe(np.polyfit(np.log(1./np.array(sizes,np.float64)),np.log(np.array(counts,np.float64)),1)[0])
+       
+   259	def border_features(bw, area, contours, roi_gray):
+   260	    if not contours or area==0:
+   261	        return {k:0.0 for k in("border_irregularity","fractal_dim","convexity","solidity","edge_grad_mean","edge_grad_std")}
+   262	    cnt=max(contours,key=cv2.contourArea); peri=cv2.arcLength(cnt,True)+1e-9
+   263	    hull=cv2.convexHull(cnt); ha=cv2.contourArea(hull)+1e-9; hp=cv2.arcLength(hull,True)+1e-9
+   264	    sx=cv2.Sobel(roi_gray,cv2.CV_32F,1,0,ksize=3); sy=cv2.Sobel(roi_gray,cv2.CV_32F,0,1,ksize=3)
+   265	    ins=np.sqrt(sx**2+sy**2)[bw>0]
+   266	    return {"border_irregularity":_safe(peri**2/(4*math.pi*area)),"fractal_dim":_fractal(bw),
+   267	            "convexity":_safe(hp/peri),"solidity":_safe(area/ha),
+   268	            "edge_grad_mean":_safe(float(ins.mean())) if ins.size else 0.0,
+   269	            "edge_grad_std": _safe(float(ins.std()))  if ins.size else 0.0}
+       
+   270	_ABCDE_COLORS={"col_white":([200,200,200],[255,255,255]),"col_red":([0,0,120],[80,80,255]),
+   271	               "col_ltbrown":([100,80,80],[200,160,160]),"col_dkbrown":([20,10,10],[100,80,80]),
+   272	               "col_blue":([100,0,0],[255,80,80]),"col_black":([0,0,0],[50,50,50])}
+       
+   273	def color_features(roi_rgb, bw):
+   274	    feats={}; mask=bw.astype(bool)
+   275	    if not mask.any():
+   276	        for sp in("rgb","hsv","lab"):
+   277	            for c in range(3):
+   278	                for s in("mean","std","skew","kurt","entropy"): feats[f"color_{sp}_ch{c}_{s}"]=0.0
+   279	        feats.update(color_white_frac=0.,color_dark_frac=0.,color_dominant_spread=0.,color_n_abcde_colors=0.)
+   280	        for k in _ABCDE_COLORS: feats[k]=0.0
+   281	        return feats
+   282	    roi_hsv=cv2.cvtColor(roi_rgb,cv2.COLOR_RGB2HSV).astype(np.float32)
+   283	    roi_lab=cv2.cvtColor(roi_rgb,cv2.COLOR_RGB2LAB).astype(np.float32)
+   284	    roi_f=roi_rgb.astype(np.float32)
+   285	    def _ch(img,ci,prefix):
+   286	        vals=img[:,:,ci][mask].astype(np.float64); mu,sd,sk,ku=_mstats(vals)
+   287	        p=np.histogram(vals,bins=64,range=(0,255))[0]; p=p/(p.sum()+1e-9)
+   288	        feats[f"{prefix}_mean"]=_safe(mu); feats[f"{prefix}_std"]=_safe(sd)
+   289	        feats[f"{prefix}_skew"]=_safe(sk); feats[f"{prefix}_kurt"]=_safe(ku)
+   290	        feats[f"{prefix}_entropy"]=_safe(-float((p*np.log2(p+1e-9)).sum()))
+   291	    for ci in range(3):
+   292	        _ch(roi_f,ci,f"color_rgb_ch{ci}"); _ch(roi_hsv,ci,f"color_hsv_ch{ci}"); _ch(roi_lab,ci,f"color_lab_ch{ci}")
+   293	    px=roi_rgb[mask]; n=len(px)+1e-9
+   294	    feats["color_white_frac"]=_safe(float(np.all(px>200,1).sum())/n)
+   295	    feats["color_dark_frac"]=_safe(float(np.all(px<50,1).sum())/n)
+   296	    lum=0.299*px[:,0].astype(float)+0.587*px[:,1]+0.114*px[:,2]
+   297	    feats["color_dominant_spread"]=_safe(float(np.percentile(lum,75)-np.percentile(lum,25)))
+   298	    roi_bgr=cv2.cvtColor(roi_rgb,cv2.COLOR_RGB2BGR); bw_u8=(bw*255).astype(np.uint8); nc=0
+   299	    for k,(lo,hi) in _ABCDE_COLORS.items():
+   300	        cm=cv2.inRange(roi_bgr,np.array(lo,np.uint8),np.array(hi,np.uint8))
+   301	        cm=cv2.bitwise_and(cm,cm,mask=bw_u8)
+   302	        frac=float(cm.sum()/255)/n; feats[k]=_safe(frac)
+   303	        if frac>0.01: nc+=1
+   304	    feats["color_n_abcde_colors"]=float(nc)
+   305	    return feats
+       
+   306	def _glcm(patch,levels=32):
+   307	    q=np.clip(patch.astype(np.float32)/255.*(levels-1),0,levels-1).astype(np.int32)
+   308	    ii,jj=np.mgrid[0:levels,0:levels]
+   309	    res={k:[] for k in("contrast","dissimilarity","homogeneity","energy","correlation")}
+   310	    for dy,dx in[(0,1),(-1,1),(1,0),(1,1)]:
+   311	        r2=slice(max(0,-dy),q.shape[0]-dy if dy>0 else None); r1=slice(dy if dy>0 else max(0,-dy),None if dy<=0 else None)
+   312	        c2=slice(max(0,-dx),q.shape[1]-dx if dx>0 else None); c1=slice(dx if dx>0 else max(0,-dx),None if dx<=0 else None)
+   313	        a=q[r2,c2].ravel(); b=q[r1,c1].ravel()
+   314	        g=np.zeros((levels,levels),np.float64); np.add.at(g,(a,b),1); np.add.at(g,(b,a),1); g/=(g.sum()+1e-9)
+   315	        diff=ii-jj
+   316	        res["contrast"].append(float((diff**2*g).sum())); res["dissimilarity"].append(float((np.abs(diff)*g).sum()))
+   317	        res["homogeneity"].append(float((g/(1+diff**2)).sum())); res["energy"].append(float((g**2).sum()))
+   318	        mi_=(ii*g).sum(); mj_=(jj*g).sum()
+   319	        si=math.sqrt(float(((ii-mi_)**2*g).sum())+1e-9); sj=math.sqrt(float(((jj-mj_)**2*g).sum())+1e-9)
+   320	        res["correlation"].append(float(((ii-mi_)*(jj-mj_)*g).sum()/(si*sj)))
+   321	    out={}
+   322	    for k,v in res.items(): out[f"glcm_{k}_mean"]=_safe(float(np.mean(v))); out[f"glcm_{k}_std"]=_safe(float(np.std(v)))
+   323	    return out
+       
+   324	def _lbp(gray,bw,n_points=8,radius=1):
+   325	    g=gray.astype(np.int32); lbp=np.zeros_like(g)
+   326	    for p in range(n_points):
+   327	        theta=2*math.pi*p/n_points; dy=int(round(-radius*math.sin(theta))); dx=int(round(radius*math.cos(theta)))
+   328	        nb=np.roll(np.roll(g,-dy,axis=0),-dx,axis=1); lbp+=((nb>=g).astype(np.int32)<<p)
+   329	    ins=lbp[bw>127].astype(np.float64)
+   330	    if ins.size==0: return {"lbp_mean":0.,"lbp_std":0.,"lbp_entropy":0.}
+   331	    p=np.histogram(ins,bins=n_points+2,range=(0,255))[0]; p=p/(p.sum()+1e-9)
+   332	    return {"lbp_mean":_safe(float(ins.mean())),"lbp_std":_safe(float(ins.std())),
+   333	            "lbp_entropy":_safe(-float((p*np.log2(p+1e-9)).sum()))}
+       
+   334	def _gabor(gray_f32,bw):
+   335	    feats={}
+   336	    for sc in(3,5,9):
+   337	        for ang in(0,45,90,135):
+   338	            kern=cv2.getGaborKernel((sc*2+1,sc*2+1),sc*.56,math.radians(ang),sc*1.2,.5,0,cv2.CV_32F)
+   339	            ins=cv2.filter2D(gray_f32,cv2.CV_32F,kern)[bw>127]
+   340	            feats[f"gabor_s{sc}_a{ang}_energy"]=_safe(float((ins**2).mean())) if ins.size else 0.
+   341	    return feats
+       
+   342	def texture_features(roi_gray,bw):
+   343	    area=bw.sum()
+   344	    z={f"glcm_{k}_{s}":0. for k in("contrast","dissimilarity","homogeneity","energy","correlation") for s in("mean","std")}
+   345	    if area==0:
+   346	        z.update(lbp_mean=0.,lbp_std=0.,lbp_entropy=0.)
+   347	        for sc in(3,5,9):
+   348	            for a in(0,45,90,135): z[f"gabor_s{sc}_a{a}_energy"]=0.
+   349	        return z
+   350	    ys,xs=np.where(bw>0); patch=roi_gray[ys.min():ys.max()+1,xs.min():xs.max()+1]
+   351	    feats=_glcm(patch); feats.update(_lbp(roi_gray,bw)); feats.update(_gabor(roi_gray.astype(np.float32)/255.,bw))
+   352	    return feats
+       
+   353	def evolution_features(bw,area,contours,img_shape):
+   354	    img_area=float(img_shape[0]*img_shape[1]); feats={"lesion_to_image_ratio":_safe(area/(img_area+1e-9))}
+   355	    if not contours or area==0:
+   356	        for k in("bbox_fill_ratio","extent","major_axis","minor_axis","eccentricity"): feats[k]=0.
+   357	        return feats
+   358	    cnt=max(contours,key=cv2.contourArea); x,y,w,h=cv2.boundingRect(cnt)
+   359	    feats["bbox_fill_ratio"]=_safe(area/img_area); feats["extent"]=_safe(area/(float(w*h)+1e-9))
+   360	    if len(cnt)>=5:
+   361	        (_,_),(ma,mi),_=cv2.fitEllipse(cnt)
+   362	        feats["major_axis"]=_safe(float(ma)); feats["minor_axis"]=_safe(float(mi))
+   363	        feats["eccentricity"]=_safe(math.sqrt(max(0.,1-(mi/(ma+1e-9))**2)))
+   364	    else: feats["major_axis"]=feats["minor_axis"]=feats["eccentricity"]=0.
+   365	    return feats
+       
+   366	def histogram_radiomics(roi_gray,bw):
+   367	    vals=roi_gray[bw.astype(bool)].astype(np.float64)
+   368	    z={k:0. for k in("hist_energy","hist_entropy","hist_mean","hist_variance","hist_kurtosis",
+   369	        "hist_skewness","hist_p10","hist_p25","hist_p75","hist_p90","hist_iqr","hist_range",
+   370	        "hist_rms","hist_uniformity","hist_median","hist_mad")}
+   371	    if vals.size==0: return z
+   372	    p=np.histogram(vals,bins=128,range=(0,255))[0]; p=p/(p.sum()+1e-9)
+   373	    mu=vals.mean(); sig=vals.std()+1e-9; p10,p25,p75,p90=np.percentile(vals,[10,25,75,90])
+   374	    return {"hist_energy":_safe(float((p**2).sum())),"hist_entropy":_safe(float(-(p*np.log2(p+1e-9)).sum())),
+   375	            "hist_mean":_safe(float(mu)),"hist_variance":_safe(float(vals.var())),
+   376	            "hist_kurtosis":_safe(float(((vals-mu)**4).mean()/sig**4)),
+   377	            "hist_skewness":_safe(float(((vals-mu)**3).mean()/sig**3)),
+   378	            "hist_p10":_safe(float(p10)),"hist_p25":_safe(float(p25)),
+   379	            "hist_p75":_safe(float(p75)),"hist_p90":_safe(float(p90)),
+   380	            "hist_iqr":_safe(float(p75-p25)),"hist_range":_safe(float(vals.max()-vals.min())),
+   381	            "hist_rms":_safe(float(math.sqrt((vals**2).mean()))),"hist_uniformity":_safe(float((p**2).sum())),
+   382	            "hist_median":_safe(float(np.median(vals))),"hist_mad":_safe(float(np.abs(vals-mu).mean()))}
+       
+   383	def shape_radiomics(bw,area,contours):
+   384	    z={k:0. for k in("shape_perimeter","shape_area","shape_sphericity","shape_roundness",
+   385	        "shape_pd_ratio","shape_max_diameter","shape_min_diameter")}
+   386	    if not contours or area==0: return z
+   387	    cnt=max(contours,key=cv2.contourArea); peri=cv2.arcLength(cnt,True)+1e-9
+   388	    feats={"shape_perimeter":_safe(peri),"shape_area":_safe(area),
+   389	           "shape_sphericity":_safe(4*math.pi*area/peri**2),
+   390	           "shape_roundness":_safe(4*area/(math.pi*(peri/math.pi)**2)),
+   391	           "shape_pd_ratio":_safe(peri/(2*math.sqrt(math.pi*area)))}
+   392	    pts=cv2.convexHull(cnt)[:,0,:]
+   393	    if len(pts)>=2:
+   394	        d=np.sqrt(((pts[:,None]-pts[None,:])**2).sum(-1))
+   395	        feats["shape_max_diameter"]=_safe(float(d.max()))
+   396	        pos=d[d>0]; feats["shape_min_diameter"]=_safe(float(pos.min()) if pos.size else 0.)
+   397	    else: feats["shape_max_diameter"]=feats["shape_min_diameter"]=0.
+   398	    return feats
+       
+   399	def hu_moments_features(bw):
+   400	    hu=cv2.HuMoments(cv2.moments(bw)).flatten()
+   401	    return {f"hu_moment_{i+1}":_safe(-math.copysign(1,h)*math.log10(abs(h)+1e-15)) for i,h in enumerate(hu)}
+       
+   402	def fourier_descriptor_features(contours,n_desc=10):
+   403	    feats={f"fourier_desc_{i+1}":0. for i in range(n_desc)}
+   404	    if not contours: return feats
+   405	    cnt=max(contours,key=cv2.contourArea)[:,0,:]
+   406	    if len(cnt)<n_desc*2: return feats
+   407	    z=cnt[:,0].astype(np.float64)+1j*cnt[:,1].astype(np.float64)
+   408	    fd=np.fft.fft(z); norm=abs(fd[1])+1e-9
+   409	    for i,m in enumerate(np.abs(fd[1:n_desc+1])/norm): feats[f"fourier_desc_{i+1}"]=_safe(float(m))
+   410	    return feats
+       
+   411	def glrlm_features(roi_gray,bw,levels=32,max_run=64):
+   412	    area=bw.sum()
+   413	    z={k:0. for k in("glrlm_sre","glrlm_lre","glrlm_gln","glrlm_rln","glrlm_rp","glrlm_lgre","glrlm_hgre")}
+   414	    if area==0: return z
+   415	    q=np.clip(roi_gray.astype(np.float32)/255.*(levels-1),0,levels-1).astype(np.int32)
+   416	    glrlm=np.zeros((levels,max_run),np.float64); H,W=q.shape
+   417	    for row in range(H):
+   418	        rq=q[row]; rb=bw[row]
+   419	        if not rb.any(): continue
+   420	        vals=rq*rb; changes=np.diff(vals,prepend=-(levels+1))!=0; mon=np.diff(rb.astype(np.int8),prepend=0)>0
+   421	        starts=np.where((changes|mon)&(rb>0))[0]; ends=np.append(starts[1:],W)
+   422	        for s,e in zip(starts,ends):
+   423	            sl=rb[s:e]; off=np.argmin(sl)
+   424	            ln=off if (not sl[off]) and off>0 else len(sl)
+   425	            glrlm[rq[s],min(ln,max_run)-1]+=1
+   426	    total=glrlm.sum()+1e-9
+   427	    RL=np.arange(1,max_run+1,dtype=np.float64)[np.newaxis,:]; GL=np.arange(1,levels+1,dtype=np.float64)[:,np.newaxis]
+   428	    return {"glrlm_sre":_safe(float((glrlm/(RL**2)).sum()/total)),"glrlm_lre":_safe(float((glrlm*RL**2).sum()/total)),
+   429	            "glrlm_gln":_safe(float((glrlm.sum(1)**2).sum()/total)),"glrlm_rln":_safe(float((glrlm.sum(0)**2).sum()/total)),
+   430	            "glrlm_rp":_safe(float(total/area)),"glrlm_lgre":_safe(float((glrlm/(GL**2)).sum()/total)),
+   431	            "glrlm_hgre":_safe(float((glrlm*GL**2).sum()/total))}
+       
+   432	def extract_all(masked_img_path, mask_path, max_dim=DEFAULT_MAX_DIM):
+   433	    img_bgr=cv2.imread(masked_img_path)
+   434	    if img_bgr is None: raise FileNotFoundError(f"Cannot read: {masked_img_path}")
+   435	    mask_raw=cv2.imread(mask_path,0)
+   436	    if mask_raw is None: raise FileNotFoundError(f"Cannot read: {mask_path}")
+   437	    roi_rgb=cv2.cvtColor(img_bgr,cv2.COLOR_BGR2RGB)
+   438	    mask_bin=cv2.resize(mask_raw,(roi_rgb.shape[1],roi_rgb.shape[0]),interpolation=cv2.INTER_NEAREST)
+   439	    roi_rgb_s,mask_s=_resize_pair(roi_rgb,mask_bin,max_dim)
+   440	    roi_gray_s=cv2.cvtColor(cv2.cvtColor(roi_rgb_s,cv2.COLOR_RGB2BGR),cv2.COLOR_BGR2GRAY)
+   441	    bw=(mask_s>127).astype(np.uint8); area=float(bw.sum())
+   442	    contours,_=cv2.findContours(bw,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+   443	    record={"image_id":_stem(masked_img_path)}
+   444	    record.update(asymmetry_features(bw,area,contours))
+   445	    record.update(border_features(bw,area,contours,roi_gray_s))
+   446	    record.update(color_features(roi_rgb_s,bw))
+   447	    record.update(texture_features(roi_gray_s,bw))
+   448	    record.update(evolution_features(bw,area,contours,roi_rgb_s.shape[:2]))
+   449	    record.update(histogram_radiomics(roi_gray_s,bw))
+   450	    record.update(shape_radiomics(bw,area,contours))
+   451	    record.update(glrlm_features(roi_gray_s,bw))
+   452	    record.update(hu_moments_features(bw))
+   453	    record.update(fourier_descriptor_features(contours))
+   454	    record.update(pyradiomics_features(roi_gray_s,bw))
+   455	    return record
+       
+   456	_WORKER_MAX_DIM = DEFAULT_MAX_DIM
+   457	def _worker(args):
+   458	    split,img_path,mask_path=args
+   459	    try:
+   460	        rec=extract_all(img_path,mask_path,max_dim=_WORKER_MAX_DIM)
+   461	        rec["split"]=split; return rec,None
+   462	    except Exception as e: return None,(img_path,str(e))
+       
+   463	def discover_pairs(masked_root,mask_root):
+   464	    entries=os.listdir(masked_root)
+   465	    subdirs=[e for e in entries if os.path.isdir(os.path.join(masked_root,e))]
+   466	    splits=subdirs if subdirs else [""]
+   467	    pairs=[]
+   468	    for split in splits:
+   469	        img_dir=os.path.join(masked_root,split) if split else masked_root
+   470	        msk_dir=os.path.join(mask_root,split) if split else mask_root
+   471	        if not os.path.isdir(msk_dir):
+   472	            print(f"  [WARN] mask dir not found: {msk_dir}"); continue
+   473	        img_files=sorted(p for ext in("*.png","*.jpg","*.jpeg") for p in glob(os.path.join(img_dir,ext)))
+   474	        mask_map={_stem(mp):mp for mp in glob(os.path.join(msk_dir,"*.png"))+glob(os.path.join(msk_dir,"*.jpg"))}
+   475	        for ip in img_files:
+   476	            stem=_stem(ip); base=stem.replace("_masked","")
+   477	            key=base if base in mask_map else (stem if stem in mask_map else None)
+   478	            if key: pairs.append((split or "unknown",ip,mask_map[key]))
+   479	    print(f"  Found {len(pairs)} pairs across splits: {sorted(set(p[0] for p in pairs))}")
+   480	    return pairs
+       
+   481	def main():
+   482	    parser=argparse.ArgumentParser()
+   483	    parser.add_argument("--masked_root",default=DEFAULT_MASKED_ROOT)
+   484	    parser.add_argument("--mask_root",default=DEFAULT_MASK_ROOT)
+   485	    parser.add_argument("--output",default=DEFAULT_OUTPUT_CSV)
+   486	    parser.add_argument("--max_dim",type=int,default=DEFAULT_MAX_DIM)
+   487	    parser.add_argument("--workers",type=int,default=DEFAULT_WORKERS)
+   488	    args=parser.parse_args()
+   489	    global _WORKER_MAX_DIM; _WORKER_MAX_DIM=args.max_dim
+   490	    print("="*62)
+   491	    print(f"  masked_root : {args.masked_root}")
+   492	    print(f"  mask_root   : {args.mask_root}")
+   493	    print(f"  output      : {args.output}")
+   494	    print(f"  max_dim={args.max_dim}  workers={args.workers}  PyRadiomics={'ON' if _RADIOMICS_OK else 'OFF'}")
+   495	    print("="*62)
+   496	    pairs=discover_pairs(args.masked_root,args.mask_root)
+   497	    if not pairs: raise RuntimeError("No paired images found.")
+   498	    rows,errors=[],[]
+   499	    if args.workers>1:
+   500	        with Pool(args.workers) as pool:
+   501	            for rec,err in tqdm(pool.imap_unordered(_worker,pairs,chunksize=4),total=len(pairs),desc="Extracting"):
+   502	                (rows if rec is not None else errors).append(rec or err)
+   503	    else:
+   504	        for item in tqdm(pairs,desc="Extracting"):
+   505	            rec,err=_worker(item)
+   506	            (rows if rec is not None else errors).append(rec or err)
+   507	    if errors:
+   508	        print(f"\n  WARNING: {len(errors)} failed:")
+   509	        for e in errors[:10]:
+   510	            if isinstance(e,tuple): print(f"    {os.path.basename(e[0])}: {e[1]}")
+   511	    if not rows: raise RuntimeError("No features extracted.")
+   512	    all_keys=list(rows[0].keys())
+   513	    for r in rows:
+   514	        for k in all_keys: r.setdefault(k,0.0)
+   515	    os.makedirs(os.path.dirname(os.path.abspath(args.output)),exist_ok=True)
+   516	    with open(args.output,"w",newline="") as f:
+   517	        w=csv.DictWriter(f,fieldnames=all_keys); w.writeheader(); w.writerows(rows)
+   518	    print(f"\n  ✓  {len(rows)} rows × {len(all_keys)} columns → {args.output}")
+       
+   519	if __name__=="__main__":
+   520	    main()
+   521	ENDOFFILE
+   522	  102  cd ..
+   523	  103  cd..
+   524	  104  cd ..
+   525	  105  # Create the script file
+   526	  106  cat > /workspaces/radiomics/dermoscopy_features/feature_extraction.py << 'ENDOFFILE'
+   527	import os, csv, math, warnings, argparse
+   528	import numpy as np
+   529	import cv2
+   530	from glob import glob
+   531	from tqdm import tqdm
+   532	from multiprocessing import Pool, cpu_count
+   533	warnings.filterwarnings("ignore")
+       
+   534	try:
+   535	    import SimpleITK as sitk
+   536	    from radiomics import featureextractor as _rx_extractor
+   537	    _RADIOMICS_OK = True
+   538	except ImportError:
+   539	    _RADIOMICS_OK = False
+   540	    print("[WARN] pyradiomics not available — rx_ features skipped")
+       
+   541	DEFAULT_MASKED_ROOT = "data/masked_images"
+   542	DEFAULT_MASK_ROOT   = "data/predicted_masks_clean"
+   543	DEFAULT_OUTPUT_CSV  = "outputs/features.csv"
+   544	DEFAULT_MAX_DIM     = 512
+   545	DEFAULT_WORKERS     = max(1, cpu_count() - 1)
+   546	RADIOMICS_CLASSES   = ["firstorder","shape2D","glcm","glrlm","glszm","ngtdm"]
+       
+   547	def _stem(p): return os.path.splitext(os.path.basename(p))[0]
+   548	def _safe(v):
+   549	    try:
+   550	        f = float(v); return 0.0 if (math.isnan(f) or math.isinf(f)) else f
+   551	    except: return 0.0
+   552	def _resize_pair(rgb, mask, max_dim):
+   553	    if max_dim <= 0: return rgb, mask
+   554	    h, w = rgb.shape[:2]; scale = max_dim / max(h, w)
+   555	    if scale >= 1.0: return rgb, mask
+   556	    nh, nw = int(h*scale), int(w*scale)
+   557	    return (cv2.resize(rgb,(nw,nh),interpolation=cv2.INTER_AREA),
+   558	            cv2.resize(mask,(nw,nh),interpolation=cv2.INTER_NEAREST))
+   559	def _mstats(arr):
+   560	    arr = arr.astype(np.float64)
+   561	    if arr.size == 0: return 0.,0.,0.,0.
+   562	    mu = arr.mean(); std = arr.std()+1e-9
+   563	    return float(mu),float(arr.std()),_safe(((arr-mu)**3).mean()/std**3),_safe(((arr-mu)**4).mean()/std**4)
+       
+   564	_EXTRACTOR = None
+   565	def _get_extractor():
+   566	    global _EXTRACTOR
+   567	    if _EXTRACTOR is None and _RADIOMICS_OK:
+   568	        params = {"setting":{"binWidth":25,"resampledPixelSpacing":None,
+   569	                             "interpolator":"sitkBSpline","verbose":False,
+   570	                             "force2D":True,"force2Ddimension":0},
+   571	                  "featureClass":{cls:[] for cls in RADIOMICS_CLASSES}}
+   572	        _EXTRACTOR = _rx_extractor.RadiomicsFeatureExtractor(params)
+   573	        _EXTRACTOR.disableAllFeatures()
+   574	        for cls in RADIOMICS_CLASSES: _EXTRACTOR.enableFeatureClassByName(cls)
+   575	    return _EXTRACTOR
+       
+   576	def pyradiomics_features(roi_gray, bw):
+   577	    ext = _get_extractor()
+   578	    if ext is None or bw.sum() == 0: return {}
+   579	    try:
+   580	        img_sitk  = sitk.GetImageFromArray(roi_gray.astype(np.int16))
+   581	        mask_sitk = sitk.GetImageFromArray(bw.astype(np.uint8))
+   582	        img_sitk.SetSpacing([1.0,1.0]); mask_sitk.SetSpacing([1.0,1.0])
+   583	        result = ext.execute(img_sitk, mask_sitk, label=1)
+   584	        return {k.replace("original_","rx_",1): _safe(v)
+   585	                for k,v in result.items() if not k.startswith("diagnostics_")}
+   586	    except: return {}
+       
+   587	def asymmetry_features(bw, area, contours):
+   588	    if area==0: return {k:0.0 for k in("asym_axis_aligned","asym_pca","compactness","elongation","axis_ratio")}
+   589	    feats={}; M=cv2.moments(bw); cx=M["m10"]/(M["m00"]+1e-9); cy=M["m01"]/(M["m00"]+1e-9)
+   590	    feats["asym_axis_aligned"]=_safe((float((bw!=np.fliplr(bw)).sum())+float((bw!=np.flipud(bw)).sum()))/(2.*area))
+   591	    ys,xs=np.where(bw>0); pts=np.stack([xs-cx,ys-cy],axis=1).astype(np.float32)
+   592	    _,_,Vt=np.linalg.svd(pts,full_matrices=False); proj=pts@Vt[0]
+   593	    h1,h2=(proj>=0).sum(),(proj<0).sum(); feats["asym_pca"]=_safe(abs(h1-h2)/(h1+h2+1e-9))
+   594	    if contours:
+   595	        cnt=max(contours,key=cv2.contourArea); peri=cv2.arcLength(cnt,True)+1e-9
+   596	        feats["compactness"]=_safe(4*math.pi*area/peri**2)
+   597	        if len(cnt)>=5:
+   598	            (_,_),(ma,mi),_=cv2.fitEllipse(cnt)
+   599	            feats["elongation"]=_safe(mi/(ma+1e-9)); feats["axis_ratio"]=_safe(ma/(mi+1e-9))
+   600	        else: feats["elongation"]=1.0; feats["axis_ratio"]=1.0
+   601	    else: feats["compactness"]=feats["elongation"]=0.0; feats["axis_ratio"]=1.0
+   602	    return feats
+       
+   603	def _fractal(bw):
+   604	    edge=cv2.Canny((bw*255).astype(np.uint8),50,150); sizes,counts=[],[]
+   605	    s=2
+   606	    while s<=128:
+   607	        h2=(edge.shape[0]//s)*s; w2=(edge.shape[1]//s)*s
+   608	        if h2==0 or w2==0: s*=2; continue
+   609	        nb=edge[:h2,:w2].reshape(h2//s,s,w2//s,s).any(axis=(1,3)).sum()
+   610	        if nb>0: sizes.append(s); counts.append(nb)
+   611	        s*=2
+   612	    if len(sizes)<2: return 1.0
+   613	    return _safe(np.polyfit(np.log(1./np.array(sizes,np.float64)),np.log(np.array(counts,np.float64)),1)[0])
+       
+   614	def border_features(bw, area, contours, roi_gray):
+   615	    if not contours or area==0:
+   616	        return {k:0.0 for k in("border_irregularity","fractal_dim","convexity","solidity","edge_grad_mean","edge_grad_std")}
+   617	    cnt=max(contours,key=cv2.contourArea); peri=cv2.arcLength(cnt,True)+1e-9
+   618	    hull=cv2.convexHull(cnt); ha=cv2.contourArea(hull)+1e-9; hp=cv2.arcLength(hull,True)+1e-9
+   619	    sx=cv2.Sobel(roi_gray,cv2.CV_32F,1,0,ksize=3); sy=cv2.Sobel(roi_gray,cv2.CV_32F,0,1,ksize=3)
+   620	    ins=np.sqrt(sx**2+sy**2)[bw>0]
+   621	    return {"border_irregularity":_safe(peri**2/(4*math.pi*area)),"fractal_dim":_fractal(bw),
+   622	            "convexity":_safe(hp/peri),"solidity":_safe(area/ha),
+   623	            "edge_grad_mean":_safe(float(ins.mean())) if ins.size else 0.0,
+   624	            "edge_grad_std": _safe(float(ins.std()))  if ins.size else 0.0}
+       
+   625	_ABCDE_COLORS={"col_white":([200,200,200],[255,255,255]),"col_red":([0,0,120],[80,80,255]),
+   626	               "col_ltbrown":([100,80,80],[200,160,160]),"col_dkbrown":([20,10,10],[100,80,80]),
+   627	               "col_blue":([100,0,0],[255,80,80]),"col_black":([0,0,0],[50,50,50])}
+       
+   628	def color_features(roi_rgb, bw):
+   629	    feats={}; mask=bw.astype(bool)
+   630	    if not mask.any():
+   631	        for sp in("rgb","hsv","lab"):
+   632	            for c in range(3):
+   633	                for s in("mean","std","skew","kurt","entropy"): feats[f"color_{sp}_ch{c}_{s}"]=0.0
+   634	        feats.update(color_white_frac=0.,color_dark_frac=0.,color_dominant_spread=0.,color_n_abcde_colors=0.)
+   635	        for k in _ABCDE_COLORS: feats[k]=0.0
+   636	        return feats
+   637	    roi_hsv=cv2.cvtColor(roi_rgb,cv2.COLOR_RGB2HSV).astype(np.float32)
+   638	    roi_lab=cv2.cvtColor(roi_rgb,cv2.COLOR_RGB2LAB).astype(np.float32)
+   639	    roi_f=roi_rgb.astype(np.float32)
+   640	    def _ch(img,ci,prefix):
+   641	        vals=img[:,:,ci][mask].astype(np.float64); mu,sd,sk,ku=_mstats(vals)
+   642	        p=np.histogram(vals,bins=64,range=(0,255))[0]; p=p/(p.sum()+1e-9)
+   643	        feats[f"{prefix}_mean"]=_safe(mu); feats[f"{prefix}_std"]=_safe(sd)
+   644	        feats[f"{prefix}_skew"]=_safe(sk); feats[f"{prefix}_kurt"]=_safe(ku)
+   645	        feats[f"{prefix}_entropy"]=_safe(-float((p*np.log2(p+1e-9)).sum()))
+   646	    for ci in range(3):
+   647	        _ch(roi_f,ci,f"color_rgb_ch{ci}"); _ch(roi_hsv,ci,f"color_hsv_ch{ci}"); _ch(roi_lab,ci,f"color_lab_ch{ci}")
+   648	    px=roi_rgb[mask]; n=len(px)+1e-9
+   649	    feats["color_white_frac"]=_safe(float(np.all(px>200,1).sum())/n)
+   650	    feats["color_dark_frac"]=_safe(float(np.all(px<50,1).sum())/n)
+   651	    lum=0.299*px[:,0].astype(float)+0.587*px[:,1]+0.114*px[:,2]
+   652	    feats["color_dominant_spread"]=_safe(float(np.percentile(lum,75)-np.percentile(lum,25)))
+   653	    roi_bgr=cv2.cvtColor(roi_rgb,cv2.COLOR_RGB2BGR); bw_u8=(bw*255).astype(np.uint8); nc=0
+   654	    for k,(lo,hi) in _ABCDE_COLORS.items():
+   655	        cm=cv2.inRange(roi_bgr,np.array(lo,np.uint8),np.array(hi,np.uint8))
+   656	        cm=cv2.bitwise_and(cm,cm,mask=bw_u8)
+   657	        frac=float(cm.sum()/255)/n; feats[k]=_safe(frac)
+   658	        if frac>0.01: nc+=1
+   659	    feats["color_n_abcde_colors"]=float(nc)
+   660	    return feats
+       
+   661	def _glcm(patch,levels=32):
+   662	    q=np.clip(patch.astype(np.float32)/255.*(levels-1),0,levels-1).astype(np.int32)
+   663	    ii,jj=np.mgrid[0:levels,0:levels]
+   664	    res={k:[] for k in("contrast","dissimilarity","homogeneity","energy","correlation")}
+   665	    for dy,dx in[(0,1),(-1,1),(1,0),(1,1)]:
+   666	        r2=slice(max(0,-dy),q.shape[0]-dy if dy>0 else None); r1=slice(dy if dy>0 else max(0,-dy),None if dy<=0 else None)
+   667	        c2=slice(max(0,-dx),q.shape[1]-dx if dx>0 else None); c1=slice(dx if dx>0 else max(0,-dx),None if dx<=0 else None)
+   668	        a=q[r2,c2].ravel(); b=q[r1,c1].ravel()
+   669	        g=np.zeros((levels,levels),np.float64); np.add.at(g,(a,b),1); np.add.at(g,(b,a),1); g/=(g.sum()+1e-9)
+   670	        diff=ii-jj
+   671	        res["contrast"].append(float((diff**2*g).sum())); res["dissimilarity"].append(float((np.abs(diff)*g).sum()))
+   672	        res["homogeneity"].append(float((g/(1+diff**2)).sum())); res["energy"].append(float((g**2).sum()))
+   673	        mi_=(ii*g).sum(); mj_=(jj*g).sum()
+   674	        si=math.sqrt(float(((ii-mi_)**2*g).sum())+1e-9); sj=math.sqrt(float(((jj-mj_)**2*g).sum())+1e-9)
+   675	        res["correlation"].append(float(((ii-mi_)*(jj-mj_)*g).sum()/(si*sj)))
+   676	    out={}
+   677	    for k,v in res.items(): out[f"glcm_{k}_mean"]=_safe(float(np.mean(v))); out[f"glcm_{k}_std"]=_safe(float(np.std(v)))
+   678	    return out
+       
+   679	def _lbp(gray,bw,n_points=8,radius=1):
+   680	    g=gray.astype(np.int32); lbp=np.zeros_like(g)
+   681	    for p in range(n_points):
+   682	        theta=2*math.pi*p/n_points; dy=int(round(-radius*math.sin(theta))); dx=int(round(radius*math.cos(theta)))
+   683	        nb=np.roll(np.roll(g,-dy,axis=0),-dx,axis=1); lbp+=((nb>=g).astype(np.int32)<<p)
+   684	    ins=lbp[bw>127].astype(np.float64)
+   685	    if ins.size==0: return {"lbp_mean":0.,"lbp_std":0.,"lbp_entropy":0.}
+   686	    p=np.histogram(ins,bins=n_points+2,range=(0,255))[0]; p=p/(p.sum()+1e-9)
+   687	    return {"lbp_mean":_safe(float(ins.mean())),"lbp_std":_safe(float(ins.std())),
+   688	            "lbp_entropy":_safe(-float((p*np.log2(p+1e-9)).sum()))}
+       
+   689	def _gabor(gray_f32,bw):
+   690	    feats={}
+   691	    for sc in(3,5,9):
+   692	        for ang in(0,45,90,135):
+   693	            kern=cv2.getGaborKernel((sc*2+1,sc*2+1),sc*.56,math.radians(ang),sc*1.2,.5,0,cv2.CV_32F)
+   694	            ins=cv2.filter2D(gray_f32,cv2.CV_32F,kern)[bw>127]
+   695	            feats[f"gabor_s{sc}_a{ang}_energy"]=_safe(float((ins**2).mean())) if ins.size else 0.
+   696	    return feats
+       
+   697	def texture_features(roi_gray,bw):
+   698	    area=bw.sum()
+   699	    z={f"glcm_{k}_{s}":0. for k in("contrast","dissimilarity","homogeneity","energy","correlation") for s in("mean","std")}
+   700	    if area==0:
+   701	        z.update(lbp_mean=0.,lbp_std=0.,lbp_entropy=0.)
+   702	        for sc in(3,5,9):
+   703	            for a in(0,45,90,135): z[f"gabor_s{sc}_a{a}_energy"]=0.
+   704	        return z
+   705	    ys,xs=np.where(bw>0); patch=roi_gray[ys.min():ys.max()+1,xs.min():xs.max()+1]
+   706	    feats=_glcm(patch); feats.update(_lbp(roi_gray,bw)); feats.update(_gabor(roi_gray.astype(np.float32)/255.,bw))
+   707	    return feats
+       
+   708	def evolution_features(bw,area,contours,img_shape):
+   709	    img_area=float(img_shape[0]*img_shape[1]); feats={"lesion_to_image_ratio":_safe(area/(img_area+1e-9))}
+   710	    if not contours or area==0:
+   711	        for k in("bbox_fill_ratio","extent","major_axis","minor_axis","eccentricity"): feats[k]=0.
+   712	        return feats
+   713	    cnt=max(contours,key=cv2.contourArea); x,y,w,h=cv2.boundingRect(cnt)
+   714	    feats["bbox_fill_ratio"]=_safe(area/img_area); feats["extent"]=_safe(area/(float(w*h)+1e-9))
+   715	    if len(cnt)>=5:
+   716	        (_,_),(ma,mi),_=cv2.fitEllipse(cnt)
+   717	        feats["major_axis"]=_safe(float(ma)); feats["minor_axis"]=_safe(float(mi))
+   718	        feats["eccentricity"]=_safe(math.sqrt(max(0.,1-(mi/(ma+1e-9))**2)))
+   719	    else: feats["major_axis"]=feats["minor_axis"]=feats["eccentricity"]=0.
+   720	    return feats
+       
+   721	def histogram_radiomics(roi_gray,bw):
+   722	    vals=roi_gray[bw.astype(bool)].astype(np.float64)
+   723	    z={k:0. for k in("hist_energy","hist_entropy","hist_mean","hist_variance","hist_kurtosis",
+   724	        "hist_skewness","hist_p10","hist_p25","hist_p75","hist_p90","hist_iqr","hist_range",
+   725	        "hist_rms","hist_uniformity","hist_median","hist_mad")}
+   726	    if vals.size==0: return z
+   727	    p=np.histogram(vals,bins=128,range=(0,255))[0]; p=p/(p.sum()+1e-9)
+   728	    mu=vals.mean(); sig=vals.std()+1e-9; p10,p25,p75,p90=np.percentile(vals,[10,25,75,90])
+   729	    return {"hist_energy":_safe(float((p**2).sum())),"hist_entropy":_safe(float(-(p*np.log2(p+1e-9)).sum())),
+   730	            "hist_mean":_safe(float(mu)),"hist_variance":_safe(float(vals.var())),
+   731	            "hist_kurtosis":_safe(float(((vals-mu)**4).mean()/sig**4)),
+   732	            "hist_skewness":_safe(float(((vals-mu)**3).mean()/sig**3)),
+   733	            "hist_p10":_safe(float(p10)),"hist_p25":_safe(float(p25)),
+   734	            "hist_p75":_safe(float(p75)),"hist_p90":_safe(float(p90)),
+   735	            "hist_iqr":_safe(float(p75-p25)),"hist_range":_safe(float(vals.max()-vals.min())),
+   736	            "hist_rms":_safe(float(math.sqrt((vals**2).mean()))),"hist_uniformity":_safe(float((p**2).sum())),
+   737	            "hist_median":_safe(float(np.median(vals))),"hist_mad":_safe(float(np.abs(vals-mu).mean()))}
+       
+   738	def shape_radiomics(bw,area,contours):
+   739	    z={k:0. for k in("shape_perimeter","shape_area","shape_sphericity","shape_roundness",
+   740	        "shape_pd_ratio","shape_max_diameter","shape_min_diameter")}
+   741	    if not contours or area==0: return z
+   742	    cnt=max(contours,key=cv2.contourArea); peri=cv2.arcLength(cnt,True)+1e-9
+   743	    feats={"shape_perimeter":_safe(peri),"shape_area":_safe(area),
+   744	           "shape_sphericity":_safe(4*math.pi*area/peri**2),
+   745	           "shape_roundness":_safe(4*area/(math.pi*(peri/math.pi)**2)),
+   746	           "shape_pd_ratio":_safe(peri/(2*math.sqrt(math.pi*area)))}
+   747	    pts=cv2.convexHull(cnt)[:,0,:]
+   748	    if len(pts)>=2:
+   749	        d=np.sqrt(((pts[:,None]-pts[None,:])**2).sum(-1))
+   750	        feats["shape_max_diameter"]=_safe(float(d.max()))
+   751	        pos=d[d>0]; feats["shape_min_diameter"]=_safe(float(pos.min()) if pos.size else 0.)
+   752	    else: feats["shape_max_diameter"]=feats["shape_min_diameter"]=0.
+   753	    return feats
+       
+   754	def hu_moments_features(bw):
+   755	    hu=cv2.HuMoments(cv2.moments(bw)).flatten()
+   756	    return {f"hu_moment_{i+1}":_safe(-math.copysign(1,h)*math.log10(abs(h)+1e-15)) for i,h in enumerate(hu)}
+       
+   757	def fourier_descriptor_features(contours,n_desc=10):
+   758	    feats={f"fourier_desc_{i+1}":0. for i in range(n_desc)}
+   759	    if not contours: return feats
+   760	    cnt=max(contours,key=cv2.contourArea)[:,0,:]
+   761	    if len(cnt)<n_desc*2: return feats
+   762	    z=cnt[:,0].astype(np.float64)+1j*cnt[:,1].astype(np.float64)
+   763	    fd=np.fft.fft(z); norm=abs(fd[1])+1e-9
+   764	    for i,m in enumerate(np.abs(fd[1:n_desc+1])/norm): feats[f"fourier_desc_{i+1}"]=_safe(float(m))
+   765	    return feats
+       
+   766	def glrlm_features(roi_gray,bw,levels=32,max_run=64):
+   767	    area=bw.sum()
+   768	    z={k:0. for k in("glrlm_sre","glrlm_lre","glrlm_gln","glrlm_rln","glrlm_rp","glrlm_lgre","glrlm_hgre")}
+   769	    if area==0: return z
+   770	    q=np.clip(roi_gray.astype(np.float32)/255.*(levels-1),0,levels-1).astype(np.int32)
+   771	    glrlm=np.zeros((levels,max_run),np.float64); H,W=q.shape
+   772	    for row in range(H):
+   773	        rq=q[row]; rb=bw[row]
+   774	        if not rb.any(): continue
+   775	        vals=rq*rb; changes=np.diff(vals,prepend=-(levels+1))!=0; mon=np.diff(rb.astype(np.int8),prepend=0)>0
+   776	        starts=np.where((changes|mon)&(rb>0))[0]; ends=np.append(starts[1:],W)
+   777	        for s,e in zip(starts,ends):
+   778	            sl=rb[s:e]; off=np.argmin(sl)
+   779	            ln=off if (not sl[off]) and off>0 else len(sl)
+   780	            glrlm[rq[s],min(ln,max_run)-1]+=1
+   781	    total=glrlm.sum()+1e-9
+   782	    RL=np.arange(1,max_run+1,dtype=np.float64)[np.newaxis,:]; GL=np.arange(1,levels+1,dtype=np.float64)[:,np.newaxis]
+   783	    return {"glrlm_sre":_safe(float((glrlm/(RL**2)).sum()/total)),"glrlm_lre":_safe(float((glrlm*RL**2).sum()/total)),
+   784	            "glrlm_gln":_safe(float((glrlm.sum(1)**2).sum()/total)),"glrlm_rln":_safe(float((glrlm.sum(0)**2).sum()/total)),
+   785	            "glrlm_rp":_safe(float(total/area)),"glrlm_lgre":_safe(float((glrlm/(GL**2)).sum()/total)),
+   786	            "glrlm_hgre":_safe(float((glrlm*GL**2).sum()/total))}
+       
+   787	def extract_all(masked_img_path, mask_path, max_dim=DEFAULT_MAX_DIM):
+   788	    img_bgr=cv2.imread(masked_img_path)
+   789	    if img_bgr is None: raise FileNotFoundError(f"Cannot read: {masked_img_path}")
+   790	    mask_raw=cv2.imread(mask_path,0)
+   791	    if mask_raw is None: raise FileNotFoundError(f"Cannot read: {mask_path}")
+   792	    roi_rgb=cv2.cvtColor(img_bgr,cv2.COLOR_BGR2RGB)
+   793	    mask_bin=cv2.resize(mask_raw,(roi_rgb.shape[1],roi_rgb.shape[0]),interpolation=cv2.INTER_NEAREST)
+   794	    roi_rgb_s,mask_s=_resize_pair(roi_rgb,mask_bin,max_dim)
+   795	    roi_gray_s=cv2.cvtColor(cv2.cvtColor(roi_rgb_s,cv2.COLOR_RGB2BGR),cv2.COLOR_BGR2GRAY)
+   796	    bw=(mask_s>127).astype(np.uint8); area=float(bw.sum())
+   797	    contours,_=cv2.findContours(bw,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+   798	    record={"image_id":_stem(masked_img_path)}
+   799	    record.update(asymmetry_features(bw,area,contours))
+   800	    record.update(border_features(bw,area,contours,roi_gray_s))
+   801	    record.update(color_features(roi_rgb_s,bw))
+   802	    record.update(texture_features(roi_gray_s,bw))
+   803	    record.update(evolution_features(bw,area,contours,roi_rgb_s.shape[:2]))
+   804	    record.update(histogram_radiomics(roi_gray_s,bw))
+   805	    record.update(shape_radiomics(bw,area,contours))
+   806	    record.update(glrlm_features(roi_gray_s,bw))
+   807	    record.update(hu_moments_features(bw))
+   808	    record.update(fourier_descriptor_features(contours))
+   809	    record.update(pyradiomics_features(roi_gray_s,bw))
+   810	    return record
+       
+   811	_WORKER_MAX_DIM = DEFAULT_MAX_DIM
+   812	def _worker(args):
+   813	    split,img_path,mask_path=args
+   814	    try:
+   815	        rec=extract_all(img_path,mask_path,max_dim=_WORKER_MAX_DIM)
+   816	        rec["split"]=split; return rec,None
+   817	    except Exception as e: return None,(img_path,str(e))
+       
+   818	def discover_pairs(masked_root,mask_root):
+   819	    entries=os.listdir(masked_root)
+   820	    subdirs=[e for e in entries if os.path.isdir(os.path.join(masked_root,e))]
+   821	    splits=subdirs if subdirs else [""]
+   822	    pairs=[]
+   823	    for split in splits:
+   824	        img_dir=os.path.join(masked_root,split) if split else masked_root
+   825	        msk_dir=os.path.join(mask_root,split) if split else mask_root
+   826	        if not os.path.isdir(msk_dir):
+   827	            print(f"  [WARN] mask dir not found: {msk_dir}"); continue
+   828	        img_files=sorted(p for ext in("*.png","*.jpg","*.jpeg") for p in glob(os.path.join(img_dir,ext)))
+   829	        mask_map={_stem(mp):mp for mp in glob(os.path.join(msk_dir,"*.png"))+glob(os.path.join(msk_dir,"*.jpg"))}
+   830	        for ip in img_files:
+   831	            stem=_stem(ip); base=stem.replace("_masked","")
+   832	            key=base if base in mask_map else (stem if stem in mask_map else None)
+   833	            if key: pairs.append((split or "unknown",ip,mask_map[key]))
+   834	    print(f"  Found {len(pairs)} pairs across splits: {sorted(set(p[0] for p in pairs))}")
+   835	    return pairs
+       
+   836	def main():
+   837	    parser=argparse.ArgumentParser()
+   838	    parser.add_argument("--masked_root",default=DEFAULT_MASKED_ROOT)
+   839	    parser.add_argument("--mask_root",default=DEFAULT_MASK_ROOT)
+   840	    parser.add_argument("--output",default=DEFAULT_OUTPUT_CSV)
+   841	    parser.add_argument("--max_dim",type=int,default=DEFAULT_MAX_DIM)
+   842	    parser.add_argument("--workers",type=int,default=DEFAULT_WORKERS)
+   843	    args=parser.parse_args()
+   844	    global _WORKER_MAX_DIM; _WORKER_MAX_DIM=args.max_dim
+   845	    print("="*62)
+   846	    print(f"  masked_root : {args.masked_root}")
+   847	    print(f"  mask_root   : {args.mask_root}")
+   848	    print(f"  output      : {args.output}")
+   849	    print(f"  max_dim={args.max_dim}  workers={args.workers}  PyRadiomics={'ON' if _RADIOMICS_OK else 'OFF'}")
+   850	    print("="*62)
+   851	    pairs=discover_pairs(args.masked_root,args.mask_root)
+   852	    if not pairs: raise RuntimeError("No paired images found.")
+   853	    rows,errors=[],[]
+   854	    if args.workers>1:
+   855	        with Pool(args.workers) as pool:
+   856	            for rec,err in tqdm(pool.imap_unordered(_worker,pairs,chunksize=4),total=len(pairs),desc="Extracting"):
+   857	                (rows if rec is not None else errors).append(rec or err)
+   858	    else:
+   859	        for item in tqdm(pairs,desc="Extracting"):
+   860	            rec,err=_worker(item)
+   861	            (rows if rec is not None else errors).append(rec or err)
+   862	    if errors:
+   863	        print(f"\n  WARNING: {len(errors)} failed:")
+   864	        for e in errors[:10]:
+   865	            if isinstance(e,tuple): print(f"    {os.path.basename(e[0])}: {e[1]}")
+   866	    if not rows: raise RuntimeError("No features extracted.")
+   867	    all_keys=list(rows[0].keys())
+   868	    for r in rows:
+   869	        for k in all_keys: r.setdefault(k,0.0)
+   870	    os.makedirs(os.path.dirname(os.path.abspath(args.output)),exist_ok=True)
+   871	    with open(args.output,"w",newline="") as f:
+   872	        w=csv.DictWriter(f,fieldnames=all_keys); w.writeheader(); w.writerows(rows)
+   873	    print(f"\n  ✓  {len(rows)} rows × {len(all_keys)} columns → {args.output}")
+       
+   874	if __name__=="__main__":
+   875	    main()
+   876	ENDOFFILE
+       
+   877	  107  # See what's in the folder
+   878	  108  ls -la /workspaces/radiomics/dermoscopy_features/
+   879	  109  ls -lh feature_extraction.py
+   880	  110  python feature_extraction.py   --masked_root data/masked_images   --mask_root   data/predicted_masks_clean   --output      outputs/features.csv   --max_dim     512   --workers     1
+   881	  111  sed -i '/"verbose": False,/d' feature_extraction.py
+   882	  112  grep -n "verbose" feature_extraction.py
+   883	  113  sed -i '/"verbose":False,/d' feature_extraction.py
+   884	  114  grep -n "verbose" feature_extraction.py
+   885	  115  nproc
+   886	  116  python feature_extraction.py   --masked_root data/masked_images   --mask_root   data/predicted_masks_clean   --output      outputs/features.csv   --max_dim     512   --workers     4
+   887	  117  # Suppress all PyRadiomics logging noise
+   888	  118  python - << 'EOF'
+   889	with open("feature_extraction.py", "r") as f:
+   890	    content = f.read()
+       
+   891	# Add logging suppression right after the warnings.filterwarnings line
+   892	old = 'warnings.filterwarnings("ignore")'
+   893	new = '''warnings.filterwarnings("ignore")
+       
+   894	# Suppress PyRadiomics verbose logging
+   895	import logging
+   896	logging.getLogger("radiomics").setLevel(logging.ERROR)
+   897	logging.getLogger("pykwalify").setLevel(logging.ERROR)'''
+       
+   898	content = content.replace(old, new, 1)
+       
+   899	with open("feature_extraction.py", "w") as f:
+   900	    f.write(content)
+   901	print("Done")
+   902	EOF
+       
+   903	  119  grep -n "logging" feature_extraction.py | head -5
+   904	  120  python feature_extraction.py   --masked_root data/masked_images   --mask_root   data/predicted_masks_clean   --output      outputs/features.csv   --max_dim     512   --workers     4
+   905	  121  python - << 'EOF'
+   906	with open("feature_extraction.py", "r") as f:
+   907	    content = f.read()
+       
+   908	old = "def _worker(args):\n    split, img_path, mask_path = args"
+   909	new = """def _worker(args):
+   910	    import logging
+   911	    logging.getLogger("radiomics").setLevel(logging.ERROR)
+   912	    logging.getLogger("pykwalify").setLevel(logging.ERROR)
+   913	    split, img_path, mask_path = args"""
+       
+   914	content = content.replace(old, new, 1)
+       
+   915	with open("feature_extraction.py", "w") as f:
+   916	    f.write(content)
+   917	print("Done")
+   918	EOF
+       
+   919	  122  grep -n "logging.getLogger" feature_extraction.py
+   920	  123  # Should show lines both at top AND inside _worker
+   921	  124  grep -n "_worker" feature_extraction.py
+   922	  125  python - << 'EOF'
+   923	with open("feature_extraction.py", "r") as f:
+   924	    lines = f.readlines()
+       
+   925	# Insert after line 312 (index 311)
+   926	insert = [
+   927	    "    import logging\n",
+   928	    "    logging.getLogger('radiomics').setLevel(logging.ERROR)\n",
+   929	    "    logging.getLogger('pykwalify').setLevel(logging.ERROR)\n",
+   930	]
+   931	lines = lines[:312] + insert + lines[312:]
+       
+   932	with open("feature_extraction.py", "w") as f:
+   933	    f.writelines(lines)
+   934	print("Done")
+   935	EOF
+       
+   936	  126  sed -n '312,320p' feature_extraction.py
+   937	  127  python feature_extraction.py   --masked_root data/masked_images   --mask_root   data/predicted_masks_clean   --output      outputs/features.csv   --max_dim     512   --workers     4
+   938	  128  python -c "
+   939	import pandas as pd
+   940	df = pd.read_csv('outputs/features.csv')
+   941	rx = [c for c in df.columns if c.startswith('rx_')]
+   942	print(f'Total PyRadiomics features: {len(rx)}')
+   943	print()
+   944	classes = ['firstorder','shape2D','glcm','glrlm','glszm','ngtdm']
+   945	for cls in classes:
+   946	    cols = [c for c in rx if cls.lower() in c.lower()]
+   947	    print(f'  {cls:<12}: {len(cols)} features')
+   948	    for c in cols[:3]:
+   949	        print(f'    {c}')
+   950	    if len(cols) > 3:
+   951	        print(f'    ... and {len(cols)-3} more')
+   952	"
+   953	  129  # Full verification
+   954	  130  python -c "
+   955	import pandas as pd
+   956	df = pd.read_csv('outputs/features.csv')
+   957	print(f'Total rows    : {len(df)}')
+   958	print(f'Total columns : {len(df.columns)}')
+   959	print(f'Missing values: {df.isnull().sum().sum()}')
+   960	print()
+   961	print('Split breakdown:')
+   962	print(df['split'].value_counts().to_dict())
+   963	"
+   964	  131  python -c "
+   965	import pandas as pd
+   966	df = pd.read_csv('outputs/features.csv')
+   967	rx = [c for c in df.columns if c.startswith('rx_')]
+       
+   968	print('=== PyRadiomics Value Check ===')
+   969	print()
+       
+   970	# Check how many rx_ columns are all zeros
+   971	all_zero = [c for c in rx if df[c].sum() == 0]
+   972	non_zero = [c for c in rx if df[c].sum() != 0]
+   973	print(f'rx_ columns with real values : {len(non_zero)} / {len(rx)}')
+   974	print(f'rx_ columns that are all zero: {len(all_zero)} / {len(rx)}')
+   975	print()
+       
+   976	# Show actual values for a sample of features
+   977	print('=== Sample values (first 3 images) ===')
+   978	sample_cols = ['rx_firstorder_Mean', 'rx_firstorder_Entropy',
+   979	               'rx_shape2D_MajorAxisLength', 'rx_glcm_Contrast',
+   980	               'rx_glrlm_ShortRunEmphasis', 'rx_glszm_SmallAreaEmphasis',
+   981	               'rx_ngtdm_Coarseness']
+   982	for col in sample_cols:
+   983	    if col in df.columns:
+   984	        vals = df[col].head(3).tolist()
+   985	        print(f'  {col:<35}: {vals}')
+       
+   986	print()
+       
+   987	# Show min/max/mean for each class
+   988	print('=== Stats per PyRadiomics class ===')
+   989	classes = ['firstorder','shape2D','glcm','glrlm','glszm','ngtdm']
+   990	for cls in classes:
+   991	    cols = [c for c in rx if cls.lower() in c.lower()]
+   992	    sub = df[cols]
+   993	    print(f'  {cls:<12} mean={sub.values.mean():.4f}  '
+   994	          f'min={sub.values.min():.4f}  max={sub.values.max():.4f}  '
+   995	          f'zeros={int((sub==0).all(axis=0).sum())}/{len(cols)}')
+   996	"
+   997	  132  cd /workspaces/radiomics/dermoscopy_features
+   998	  133  git status
+   999	  134  git add feature_extraction.py
+  1000	  135  git add requirements.txt
+  1001	  136  git add outputs/features.csv
+  1002	  137  # Commit
+  1003	  138  git commit -m "Add feature extraction script and extracted features CSV (2750 images, 234 features)"
+  1004	  139  # Push to GitHub
+  1005	  140  git push origin main
+  1006	  141  git log --oneline -3
+  1007	  142  git status
+  1008	  143  # Should say: nothing to commit, working tree clean
+  1009	  144  git log --oneline -3
+  1010	  145  git status
+  1011	  146  # Should say: nothing to commit, working tree clean
+  1012	  147  # See all commands you ran this session
+  1013	  148  history
+  1014	  149  # Save to a file
+  1015	  150  history > outputs/terminal_history.txt
+  1016	  151  # View it
+  1017	  152  cat outputs/terminal_history.txt
+  1018	  153  # Save history with line numbers and timestamps
+  1019	  154  history | nl > outputs/session_log.txt
